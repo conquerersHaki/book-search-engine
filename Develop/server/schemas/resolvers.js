@@ -16,7 +16,7 @@ const resolvers = {
     },
   },
 
-//   adding mutations for login, adding users, saving books and removing them
+//   adding mutation code for login, adding users, saving books and removing them
   Mutation: {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -30,7 +30,7 @@ const resolvers = {
       if (!correctPassword) {
         throw new AuthenticationError("Invalid credentials");
       }
-      
+
       const token = signToken(user);
 
       return { token, user };
