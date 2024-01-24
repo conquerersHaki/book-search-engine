@@ -1,6 +1,6 @@
-const { AuthenticationError } = require("apollo-server-errors");
+// const { AuthenticationError } = require("apollo-server-errors");
 const { User } = require("../models");
-const { signToken } = require("../utils/auth");
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 // query for mongoose models
 const resolvers = {
@@ -12,7 +12,7 @@ const resolvers = {
         );
         return userData;
       }
-      throw new AuthenticationError("Not logged in");
+      throw AuthenticationError;
     },
   },
 
@@ -22,13 +22,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError("Invalid credentials");
+        throw AuthenticationError;
       }
 
       const correctPassword = await user.isCorrectPassword(password);
     //   checking password with user--if no match, return error
       if (!correctPassword) {
-        throw new AuthenticationError("Invalid credentials");
+        throw AuthenticationError;
       }
 
       const token = signToken(user);
@@ -52,7 +52,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      throw AuthenticationError;
     },
 
     removeBook: async (parent, { bookId }, context) => {
@@ -64,7 +64,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      throw AuthenticationError;
     },
   },
 };

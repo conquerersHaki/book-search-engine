@@ -1,6 +1,6 @@
-const { gql } = require("apollo-server-express");
+// const { gql } = require("apollo-server-express");
 
-const typeDefs = gql`
+const typeDefs = `
   
     type User {
     _id: ID
@@ -37,10 +37,6 @@ const typeDefs = gql`
     me: User
   }
   
-// accepting email and pass
-// returning auth type
-// taking book details and returning user type
-// taking inn book id and returning user type
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
