@@ -3,10 +3,11 @@ import { Form, Button, Alert } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
 import { ADD_USER } from '../utils/mutations';
+import { gql, useMutation } from '@apollo/client';
 
 const SignupForm = () => {
   // add_user mutation
-  [addUser] = useMutation(ADD_USER);
+  const [addUser] = useMutation(ADD_USER);
   // set initial form state
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
   // set state for form validation
@@ -21,29 +22,33 @@ const SignupForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-
+  
     try {
-      const response = await createUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
+      const response = await addUser({
+        variables: { ...userFormData },
+      });
+  
+      // Check for errors in the GraphQL response
+      if (response.errors) {
+        throw new Error(response.errors[0].message);
       }
-
-      const { token, user } = await response.json();
-      console.log(user);
+  
+      // Access the data from the GraphQL response
+      const { addUser: { token, user } } = response.data;
+  
       Auth.login(token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
     }
-
+  
     setUserFormData({
       username: '',
       email: '',

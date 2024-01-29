@@ -45,6 +45,7 @@ const resolvers = {
 
     saveBook: async (parent, { input }, context) => {
       if (context.user) {
+        console.log("save",input,context.user)
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $addToSet: { savedBooks: input } },
@@ -52,6 +53,7 @@ const resolvers = {
         );
         return updatedUser;
       }
+      console.log("Boot to save",input,context.user)
       throw AuthenticationError;
     },
 
